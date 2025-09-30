@@ -9,6 +9,7 @@
 #include "args/args.hxx"
 #include "imgui.h"
 
+#include "render_svg.h"
 #include "utils.h"
 
 using namespace geometrycentral;
@@ -66,14 +67,7 @@ int main(int argc, char** argv) {
         polyscope::guessNiceNameFromPath(filename), geom->vertexPositions,
         mesh->getFaceVertexList(), polyscopePermutations(*mesh));
 
-    std::vector<double> vData;
-    vData.reserve(mesh->nVertices());
-    for (size_t iV = 0; iV < mesh->nVertices(); ++iV) {
-        vData.push_back(randomReal(0, 1));
-    }
-
-    auto q = psMesh->addVertexScalarQuantity("data", vData);
-    q->setEnabled(true);
+    renderPolyscopeToSVG("bunny.svg", psMesh);
 
     // Give control to the polyscope gui
     polyscope::show();

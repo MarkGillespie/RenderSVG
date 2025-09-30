@@ -8,11 +8,12 @@ endif()
 add_executable(
   run
   main.cpp
+  render_svg.cpp
   utils.cpp
 )
 # borrow args.hxx directly from polyscope
 target_include_directories(run PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../deps/polyscope/deps/args/")
-target_link_libraries(run polyscope geometry-central)
+target_link_libraries(run polyscope geometry-central fcpw)
 target_compile_definitions(run PUBLIC PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 
 option(PACKAGE_TESTS "Build the tests" ON)

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10.0)
 SET(CMAKE_CXX_STANDARD 11)
 
-project(gc_polyscope_example)
+project(render_svg)
 
 # == Export compile commands
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -24,8 +24,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STR
 
   # using Clang (linux or apple) or GCC
   message("Using clang/gcc compiler flags")
-  SET(BASE_CXX_FLAGS "-Wall -Wextra -Werror -g3")
-  SET(DISABLED_WARNINGS " -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-deprecated-declarations -Wno-missing-braces -Wno-unused-private-field -Wno-deprecated-copy -Wno-unknown-warning-option -Wno-unused-but-set-parameter -Wno-unused-but-set-variable")
+  SET(BASE_CXX_FLAGS "-Wall -Wextra -g3")
+  SET(DISABLED_WARNINGS " -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-deprecated-declarations -Wno-missing-braces -Wno-unused-private-field -Wno-deprecated-copy -Wno-unknown-warning-option -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-sign-compare")
   SET(TRACE_INCLUDES " -H -Wno-error=unused-command-line-argument")
 
   if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
@@ -72,6 +72,7 @@ endif()
 
 
 # == Deps
+add_subdirectory(deps/fcpw)
 add_subdirectory(deps/geometry-central)
 add_subdirectory(deps/polyscope)
 add_subdirectory(src)
