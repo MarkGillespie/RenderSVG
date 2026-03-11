@@ -15,6 +15,8 @@
 #include <sstream>
 #include <unordered_map>
 
+#include "utils.h"
+
 using geometrycentral::Vector2;
 using geometrycentral::Vector3;
 
@@ -59,8 +61,12 @@ struct ProjectedPoint {
 
 // Convert Vector3 to glm::vec3
 inline glm::vec3 toGLM(const Vector3& v) { return glm::vec3(v.x, v.y, v.z); }
-inline fcpw::Vector3 toFCPW(const Vector3& v) { return {v.x, v.y, v.z}; }
-inline fcpw::Vector3 toFCPW(const glm::vec3& v) { return {v.x, v.y, v.z}; }
+inline fcpw::Vector3 toFCPW(const Vector3& v) {
+    return {float(v.x), float(v.y), float(v.z)};
+}
+inline fcpw::Vector3 toFCPW(const glm::vec3& v) {
+    return {float(v.x), float(v.y), float(v.z)};
+}
 
 // Convert glm::vec3 to Vector3
 inline Vector3 fromGLM(const glm::vec3& v) { return Vector3{v.x, v.y, v.z}; }

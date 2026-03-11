@@ -101,23 +101,38 @@ void renderPolyscopeToSVG(const std::string& filename,
         // Get mesh color (assuming uniform color)
         glm::vec3 meshColor = mesh->getSurfaceColor();
 
-        for (size_t iF = 0; iF < mesh->nFacesTriangulation(); iF++) {
+        for (size_t iF = 0; iF + 1 < mesh->faceIndsStart.size(); iF++) {
             ProjectedFace pf;
             pf.meshIndex = meshIdx;
             pf.color     = {meshColor.x, meshColor.y, meshColor.z};
 
-            // Compute face center and normal
-            std::array<Vector3, 3> v{{fromGLM(p[faces[3 * iF + 0]]),
-                                      fromGLM(p[faces[3 * iF + 1]]),
-                                      fromGLM(p[faces[3 * iF + 2]])}};
+            // read off positions for face vertices from polyscope mesh
+            std::vector<Vector3> v;
+            size_t iStart  = mesh->faceIndsStart[iF];
+            size_t iEnd    = mesh->faceIndsStart[iF + 1];
+            Vector3 center = Vector3::zero();
+            for (size_t iV = iStart; iV < iEnd; iV++) {
+                v.push_back(fromGLM(p[mesh->faceIndsEntries[iV]]));
+                center += v.back();
+            }
+            center /= v.size();
+            size_t degree = v.size();
+            if (degree < 3) {
+                std::cout << "err: faces must have degree at least 3" << vendl;
+                std::cout << "Face " << iF << vendl;
+                std::cout << "   ind start: " << iStart << " of "
+                          << mesh->faceIndsEntries.size() << vendl;
+                std::cout << "     ind end: " << iEnd << " of "
+                          << mesh->faceIndsEntries.size() << vendl;
+                exit(1);
+            }
 
-            Vector3 center = (v[0] + v[1] + v[2]) / 3.0f;
             Vector3 normal = cross(v[1] - v[0], v[2] - v[0]);
             normal         = normal / norm(normal);
             pf.normal      = normal;
 
             // Project vertices
-            for (size_t i = 0; i < 3; ++i) {
+            for (size_t i = 0; i < v.size(); ++i) {
                 pf.vertices.push_back(projectToScreen(
                     v[i], viewMat, projMat, options.width, options.height));
             }
